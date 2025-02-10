@@ -1,4 +1,4 @@
-package com.hadirahimi.calculator
+package com.vij.calculator
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -21,6 +21,6 @@ class ExampleInstrumentedTest
     {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.hadirahimi.calculator" , appContext.packageName)
+        assertEquals("com.vij.calculator" , appContext.packageName)
     }
 }

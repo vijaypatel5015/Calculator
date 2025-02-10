@@ -1,4 +1,4 @@
-package com.hadirahimi.calculator
+package com.vij.calculator
 
 import org.junit.Test
 

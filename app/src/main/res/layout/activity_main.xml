@@ -16,7 +16,7 @@
         android:layout_marginTop="60dp"
         android:fontFamily="@font/montserrat_medium"
         android:gravity="end"
-        android:textColor="@color/soft_purple"
+        android:textColor="@color/soft_grey"
         android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="formula"/>
@@ -57,7 +57,7 @@
             android:layout_columnSpan="2"
             android:layout_columnWeight="2"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/soft_purple"
+            android:backgroundTint="@color/soft_grey"
             android:fontFamily="@font/montserrat_medium"
             android:text="@string/c"
             android:textSize="30sp"
@@ -70,7 +70,7 @@
             android:layout_columnSpan="1"
             android:layout_columnWeight="1"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/soft_purple"
+            android:backgroundTint="@color/soft_grey"
             android:fontFamily="@font/montserrat_medium"
             android:text="@string/plus"
             android:textSize="30sp"
@@ -83,7 +83,7 @@
             android:layout_columnSpan="1"
             android:layout_columnWeight="1"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/soft_purple"
+            android:backgroundTint="@color/soft_grey"
             android:fontFamily="@font/montserrat_medium"
             android:text="@string/divide"
             android:textSize="30sp"
@@ -135,7 +135,7 @@
             android:layout_columnSpan="1"
             android:layout_columnWeight="1"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/soft_purple"
+            android:backgroundTint="@color/soft_grey"
             android:fontFamily="@font/montserrat_medium"
             android:text="@string/multiply"
             android:textSize="30sp"
@@ -187,7 +187,7 @@
             android:layout_columnSpan="1"
             android:layout_columnWeight="1"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/soft_purple"
+            android:backgroundTint="@color/soft_grey"
             android:fontFamily="@font/montserrat_medium"
             android:text="@string/mines"
             android:textSize="30sp"
@@ -240,7 +240,7 @@
             android:layout_columnSpan="1"
             android:layout_columnWeight="1"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/soft_purple"
+            android:backgroundTint="@color/soft_grey"
             android:fontFamily="@font/montserrat_medium"
             android:text="@string/equal"
             android:textSize="30sp"
@@ -276,31 +276,3 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-package com.hadirahimi.calculator
+package com.vij.calculator
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,155 +6,136 @@ import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
-import com.hadirahimi.calculator.databinding.ActivityMainBinding
+import com.vij.calculator.databinding.ActivityMainBinding
+import java.util.*
 
-class MainActivity : AppCompatActivity()
-{
-    //binding
-    private lateinit var binding : ActivityMainBinding
-    
-    //other
-    private var firstnumber = ""
-    private var currentNumber = ""
-    private var currentOperator = ""
-    private var result = ""
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private var expression = ""
+
     @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
-        //NoLimitScreen
-        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        //initViews
-        binding.apply {
-            // get all buttons
-            binding.layoutMain.children.filterIsInstance<Button>().forEach { button ->
-                //buttons click listener
-                button.setOnClickListener {
-                    //get clicked button text
-                    val buttonText = button.text.toString()
-                    when{
-                        buttonText.matches(Regex("[0-9]"))->{
-                            if(currentOperator.isEmpty())
-                            {
-                                firstnumber+=buttonText
-                                tvResult.text = firstnumber
-                            }else
-                            {
-                                currentNumber+=buttonText
-                                tvResult.text = currentNumber
-                            }
-                        }
-                        buttonText.matches(Regex("[+\\-*/]"))->{
-                            currentNumber = ""
-                            if (tvResult.text.toString().isNotEmpty())
-                            {
-                                currentOperator = buttonText
-                                tvResult.text = "0"
-                            }
-                        }
-                        buttonText == "="->{
-                            if (currentNumber.isNotEmpty()&& currentOperator.isNotEmpty())
-                            {
-                                tvFormula.text = "$firstnumber$currentOperator$currentNumber"
-                                result = evaluateExpression(firstnumber,currentNumber,currentOperator)
-                                firstnumber = result
-                                tvResult.text = result
-                            }
-                        }
-                        buttonText == "."->{
-                            if(currentOperator.isEmpty())
-                            {
-                                if (! firstnumber.contains("."))
-                                {
-                                    if(firstnumber.isEmpty())firstnumber+="0$buttonText"
-                                    else firstnumber +=buttonText
-                                    tvResult.text = firstnumber
-                                }
-                            }else
-                            {
-                                if (! currentNumber.contains("."))
-                                {
-                                    if(currentNumber.isEmpty()) currentNumber+="0$buttonText"
-                                    else currentNumber +=buttonText
-                                    tvResult.text = currentNumber
-                                }
-                            }
-                        }
-                        buttonText == "C"->{
-                            currentNumber = ""
-                            firstnumber = ""
-                            currentOperator = ""
-                            tvResult.text = "0"
-                            tvFormula.text = ""
-                        }
-                    }
-                }
-            }
-            
-            
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+
+        setupButtonClickListeners()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setupButtonClickListeners() {
+        binding.layoutMain.children.filterIsInstance<Button>().forEach { button ->
+            button.setOnClickListener { handleButtonClick(button.text.toString()) }
         }
     }
-    
-     //functions
-     private fun evaluateExpression(firstNumber:String,secondNumber:String,operator:String):String
-     {
-         val num1  = firstNumber.toDouble()
-         val num2  = secondNumber.toDouble()
-         return when(operator)
-         {
-             "+"-> (num1+num2).toString()
-             "-"-> (num1-num2).toString()
-             "*"-> (num1*num2).toString()
-             "/"-> (num1/num2).toString()
-             else ->""
-         }
-     }
+
+    @SuppressLint("SetTextI18n")
+    private fun handleButtonClick(buttonText: String) {
+        when {
+            buttonText.matches(Regex("[0-9]")) || buttonText == "." -> handleNumberInput(buttonText)
+            buttonText.matches(Regex("[-+*/]")) -> handleOperatorInput(buttonText)
+            buttonText == "=" -> calculateResult()
+            buttonText == "C" -> clearCalculator()
+        }
+    }
+
+    private fun handleNumberInput(number: String) {
+        expression += number
+        binding.tvResult.text = expression
+    }
+
+    private fun handleOperatorInput(operator: String) {
+        if (expression.isNotEmpty() && !expression.last().toString().matches(Regex("[-+*/]"))) {
+            expression += operator
+            binding.tvResult.text = expression
+        }
+    }
+
+    private fun calculateResult() {
+        if (expression.isNotEmpty()) {
+            try {
+                val result = evaluateExpression(expression)
+                binding.tvFormula.text = expression
+                binding.tvResult.text = result
+                expression = result // Set result as new expression for continued calculations
+            } catch (e: Exception) {
+                binding.tvResult.text = "Error"
+                expression = ""
+            }
+        }
+    }
+
+    private fun clearCalculator() {
+        expression = ""
+        binding.tvResult.text = "0"
+        binding.tvFormula.text = ""
+    }
+
+    private fun evaluateExpression(expression: String): String {
+        return try {
+            val postfix = infixToPostfix(expression)
+            val result = evaluatePostfix(postfix)
+            result.toString()
+        } catch (e: Exception) {
+            "Error"
+        }
+    }
+
+    // Convert infix notation to postfix notation using the Shunting-Yard Algorithm
+    private fun infixToPostfix(expression: String): List<String> {
+        val output = mutableListOf<String>()
+        val operators = Stack<Char>()
+        val precedence = mapOf('+' to 1, '-' to 1, '*' to 2, '/' to 2)
+
+        var numberBuffer = ""
+
+        for (char in expression) {
+            when {
+                char.isDigit() || char == '.' -> numberBuffer += char
+                char in precedence -> {
+                    if (numberBuffer.isNotEmpty()) {
+                        output.add(numberBuffer)
+                        numberBuffer = ""
+                    }
+                    while (operators.isNotEmpty() && precedence[char]!! <= precedence[operators.peek()]!!) {
+                        output.add(operators.pop().toString())
+                    }
+                    operators.push(char)
+                }
+            }
+        }
+        if (numberBuffer.isNotEmpty()) output.add(numberBuffer)
+        while (operators.isNotEmpty()) output.add(operators.pop().toString())
+
+        return output
+    }
+
+    // Evaluate the postfix expression
+    private fun evaluatePostfix(postfix: List<String>): Double {
+        val stack = Stack<Double>()
+
+        for (token in postfix) {
+            when {
+                token.matches(Regex("-?\\d+(\\.\\d+)?")) -> stack.push(token.toDouble())
+                else -> {
+                    val b = stack.pop()
+                    val a = stack.pop()
+                    val result = when (token) {
+                        "+" -> a + b
+                        "-" -> a - b
+                        "*" -> a * b
+                        "/" -> if (b != 0.0) a / b else throw ArithmeticException("Divide by zero")
+                        else -> throw IllegalArgumentException("Unknown operator")
+                    }
+                    stack.push(result)
+                }
+            }
+        }
+        return stack.pop()
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
