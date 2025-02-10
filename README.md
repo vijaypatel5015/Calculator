@@ -22,6 +22,8 @@ A simple calculator app that allows users to perform basic arithmetic operations
 
 ### Calculator in Action
 ![Calculation](https://raw.githubusercontent.com/vijaypatel5015/Calculator/main/screenshots/1.png?timestamp=20240210)
+![Calculation](https://raw.githubusercontent.com/vijaypatel5015/Calculator/main/screenshots/2.png?timestamp=20240210) 
+![Calculation](https://raw.githubusercontent.com/vijaypatel5015/Calculator/main/screenshots/3.png?timestamp=20240210) 
 
 ## Author
 
